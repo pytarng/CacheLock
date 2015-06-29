@@ -13,15 +13,26 @@ import java.util.UUID;
  */
 public class LockSmith {
 
-	protected long lockExpire = Constants.DEFAULT_LOCK_EXPIRE_MS;
-	protected long acquireTimeout = Constants.DEFAULT_ACQUIRE_TIMEOUT_MS;
-	protected long nextInterval = Constants.DEFAULT_ACQUIRE_INTERVAL_MS;
+	protected Configuration config = new DefaultConfiguration();
+
+	public LockSmith() {
+
+	}
+
+	public void config(Configuration config) {
+		this.config = config;
+	}
 
 	public void lock(CacheLock lock) throws LockFailedException {
 
 		String key = lock.getKey();
 		String field = lock.getField();
 		boolean locked = false;
+
+		long lockExpire = (long) this.config.getProperty(Configuration.LOCK_EXPIRATION);
+		long acquireTimeout = (long) this.config.getProperty(Configuration.ACQUIRE_TIMEOUT);
+		long nextInterval = (long) this.config.getProperty(Configuration.INIT_INTERVAL);
+		float priorityRatio = (float) this.config.getProperty(Configuration.PRIORITY_RATIO);
 
 		long begin = System.currentTimeMillis();
 
@@ -86,7 +97,7 @@ public class LockSmith {
 			// wait for the next round.
 			try {
 				Thread.sleep(nextInterval);
-				nextInterval = (long) (nextInterval * Constants.DEFAULT_PRIORITY_RATIO);
+				nextInterval = (long) (nextInterval * priorityRatio);
 			} catch (InterruptedException e) {
 				throw new LockFailedException(String.format("Lock acquiring process for key[%s] interrupted unexpectedly! Failed!", key));
 			}
