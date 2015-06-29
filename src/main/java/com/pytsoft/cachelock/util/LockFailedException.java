@@ -1,7 +1,7 @@
 package com.pytsoft.cachelock.util;
 
 /**
- * Created by Administrator on 2015/6/4.
+ * Created by PYT on 2015/6/30
  */
 public class LockFailedException extends Exception {
     public LockFailedException(String errMsg) {

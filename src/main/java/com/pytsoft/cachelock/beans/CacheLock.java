@@ -1,29 +1,27 @@
 package com.pytsoft.cachelock.beans;
 
+import com.pytsoft.cachelock.connector.CacheClient;
+import com.pytsoft.cachelock.util.Constants;
+
 /**
- * Created by Administrator on 2015/5/4.
+ * Created by PYT on 2015/6/30.
  */
 public class CacheLock {
+    protected String key;
+    protected String field;
 
-    private String key;
+    protected boolean hashLock = false;
+    protected boolean locked = false;
 
-    private String field;
+    protected CacheClient client;
 
-    private Object lock;
-
-    private boolean hashLock = false;
-
-    public CacheLock(){};
-
-    public CacheLock(String key, Object lock) {
-        this.key = key;
-        this.lock = lock;
+    public CacheLock(String key) {
+       this.key = Constants.CACHE_KEY_HEAD_LOCKER + key;
     }
 
-    public CacheLock(String key, String field, Object lock) {
-        this.key = key;
-        this.field = field;
-        this.lock = lock;
+    public CacheLock(String key, String field) {
+        this(key);
+        this.field = Constants.CACHE_KEY_HEAD_LOCKER + field;
         this.hashLock = true;
     }
 
@@ -31,23 +29,23 @@ public class CacheLock {
         return key;
     }
 
-    public void setKey(String key) {
-        this.key = key;
-    }
-
     public String getField() {
         return field;
     }
 
-    public void setField(String field) {
-        this.field = field;
+    public boolean isHashLock() {
+        return hashLock;
     }
 
-    public Object getLock() {
-        return lock;
+    public boolean isLocked() {
+        return locked;
     }
 
-    public void setLock(Object lock) {
-        this.lock = lock;
+    public void setLocked(boolean locked) {
+        this.locked = locked;
+    }
+
+    public CacheClient getClient() {
+        return client;
     }
 }
