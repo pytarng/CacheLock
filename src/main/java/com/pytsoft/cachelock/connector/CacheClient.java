@@ -1,9 +1,14 @@
 package com.pytsoft.cachelock.connector;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Created by PYT on 2015/6/29.
  */
 public interface CacheClient {
+
+    Logger LOG = LoggerFactory.getLogger(CacheClient.class);
 
     boolean setnx(String key, String value);
 

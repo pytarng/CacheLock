@@ -16,10 +16,10 @@ public class LockSmith {
 	protected Configuration config = new DefaultConfiguration();
 
 	public LockSmith() {
-
+		this.config = new DefaultConfiguration();
 	}
 
-	public void config(Configuration config) {
+	public LockSmith(Configuration config) {
 		this.config = config;
 	}
 
@@ -27,7 +27,6 @@ public class LockSmith {
 
 		String key = lock.getKey();
 		String field = lock.getField();
-		boolean locked = false;
 
 		long lockExpire = (long) this.config.getProperty(Configuration.LOCK_EXPIRATION);
 		long acquireTimeout = (long) this.config.getProperty(Configuration.ACQUIRE_TIMEOUT);
@@ -105,7 +104,7 @@ public class LockSmith {
 	}
 
 	public void unlock(CacheLock lock) {
-		if (lock.isLocked()) {
+		if (lock != null && lock.isLocked()) {
 			if (!lock.isHashLock()) {
 				lock.getClient().del(lock.getKey());
 			} else {

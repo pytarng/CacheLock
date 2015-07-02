@@ -6,6 +6,7 @@ package com.pytsoft.cachelock.util;
 public class Constants {
     public static final String CACHE_KEY_HEAD_LOCKER = "booking:locker::";
     public static final String NAMESPACE_SEPARATOR = "::";
+    public static final String DEFAULT_SEPARATOR = "___";
 
     public static final long DEFAULT_ACQUIRE_INTERVAL_MS = 100;
     public static final long DEFAULT_LOCK_EXPIRE_MS = 15 * 1000;
