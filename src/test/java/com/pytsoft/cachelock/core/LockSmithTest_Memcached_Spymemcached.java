@@ -1,15 +1,11 @@
 package com.pytsoft.cachelock.core;
 
 import com.pytsoft.cachelock.beans.MemcachedLock;
-import com.pytsoft.cachelock.beans.RedisLock;
 import com.pytsoft.cachelock.util.Constants;
 import com.pytsoft.cachelock.util.LockFailedException;
 import net.spy.memcached.MemcachedClient;
 import org.junit.Before;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import redis.clients.jedis.Jedis;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
