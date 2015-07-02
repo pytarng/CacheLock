@@ -1,5 +1,6 @@
-package com.pytsoft.cachelock.core;
+package com.pytsoft.cachelock;
 
+import com.pytsoft.cachelock.LockSmithTest;
 import com.pytsoft.cachelock.beans.RedisLock;
 import com.pytsoft.cachelock.util.Constants;
 import com.pytsoft.cachelock.util.LockFailedException;

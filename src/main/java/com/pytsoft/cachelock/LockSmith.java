@@ -1,7 +1,9 @@
-package com.pytsoft.cachelock.core;
+package com.pytsoft.cachelock;
 
 import com.pytsoft.cachelock.beans.CacheLock;
 import com.pytsoft.cachelock.connector.CacheClient;
+import com.pytsoft.cachelock.core.Configuration;
+import com.pytsoft.cachelock.core.DefaultConfiguration;
 import com.pytsoft.cachelock.util.Constants;
 import com.pytsoft.cachelock.util.LockFailedException;
 import org.apache.commons.lang3.StringUtils;
@@ -27,6 +29,7 @@ public class LockSmith {
 
         String key = lock.getKey();
         String field = lock.getField();
+        boolean isHash = lock.isHashLock();
 
         long lockExpire = (long) this.config.getProperty(Configuration.LOCK_EXPIRATION);
         long acquireTimeout = (long) this.config.getProperty(Configuration.ACQUIRE_TIMEOUT);
@@ -49,48 +52,40 @@ public class LockSmith {
                 throw new LockFailedException("Lock time out!");
             }
 
-            if (!lock.isHashLock()) {
-                if (client.setnx(key, lockValue)) {
-                    // lock acquired
-                    lock.setLocked(true);
-                    return;
-                }
-
-                // check whether already own this key.
-                String prevLockValue = client.get(key);
-                if (StringUtils.equals(prevLockValue, lockValue)) {
-                    lock.setLocked(true);
-                    return;
-                }
-
-                // check whether previous owner already expired.
-                long expiredTime = this.parseTime(prevLockValue);
-                if (expiredTime < current) {
-                    // previous lock is expired, try to acquire!
-                    client.set(key, lockValue);
-                    continue;
-                }
+            boolean set;
+            if (!isHash) {
+                set = client.setnx(key, lockValue);
             } else {
-                if (client.hsetnx(key, field, lockValue)) {
-                    // lock acquired
-                    lock.setLocked(true);
-                    return;
-                }
+                set = client.hsetnx(key, field, lockValue);
+            }
+            if (set) {
+                // lock acquired
+                lock.setLocked(true);
+                return;
+            }
 
-                // check whether already own this key.
-                String prevLockValue = client.hget(key, field);
-                if (StringUtils.equals(prevLockValue, lockValue)) {
-                    lock.setLocked(true);
-                    return;
-                }
+            // check whether already own this key.
+            String prevLockValue;
+            if (!isHash) {
+                prevLockValue = client.get(key);
+            } else {
+                prevLockValue = client.hget(key, field);
+            }
+            if (StringUtils.equals(prevLockValue, lockValue)) {
+                lock.setLocked(true);
+                return;
+            }
 
-                // check whether previous owner already expired.
-                long expiredTime = parseTime(prevLockValue);
-                if (expiredTime < current) {
-                    // previous lock is expired, try to acquire!
+            // check whether previous owner already expired.
+            long expiredTime = this.parseTime(prevLockValue);
+            if (expiredTime < current) {
+                // previous lock is expired, try to acquire!
+                if (!isHash) {
+                    client.set(key, lockValue);
+                } else {
                     client.hset(key, field, lockValue);
-                    continue;
                 }
+                continue;
             }
 
             // wait for the next round.

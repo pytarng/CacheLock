@@ -1,5 +1,6 @@
-package com.pytsoft.cachelock.core;
+package com.pytsoft.cachelock;
 
+import com.pytsoft.cachelock.LockSmith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
