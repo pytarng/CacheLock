@@ -12,9 +12,12 @@ import redis.clients.jedis.JedisPoolConfig;
 import java.io.IOException;
 
 /**
- * Created by Administrator on 2015/6/30.
+ * Test cases class for {@code LockSmith} for redis server.
+ *
+ * @author Ben PY Tarng
+ * @see com.pytsoft.cachelock.LockSmith
+ * @since JDK 1.6
  */
-
 public class LockSmithTest_Redis_Jedis extends LockSmithTest {
 
 	private JedisPool pool;
@@ -30,6 +33,7 @@ public class LockSmithTest_Redis_Jedis extends LockSmithTest {
 		config.setMaxIdle(10);
 		config.setMinIdle(5);
 		config.setMaxWaitMillis(5000);
+
 		this.pool = new JedisPool(config, this.cacheServerHost, this.redisServerPort, 5000);
 	}
 

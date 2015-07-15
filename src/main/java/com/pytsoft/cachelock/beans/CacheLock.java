@@ -3,7 +3,31 @@ package com.pytsoft.cachelock.beans;
 import com.pytsoft.cachelock.connector.CacheClient;
 import com.pytsoft.cachelock.util.Constants;
 
-public class CacheLock {
+/**
+ * The {@code CacheLock} abstract class defines variables to represent for a lock target.
+ * <p>
+ * There are two kinds of constructor, with two arguments (key and client) and three arguments (key, field, and client)
+ * separately, represents for key lock and hash field lock.
+ * <p>
+ * The lock class and cache client class should be in pairs, and this parent abstract class should not be used directly.
+ * For example:
+ * <blackquote><pre>
+ *     CacheClient redisClient = new RedisClient(jedis);
+ *     CacheLock cacheLock = new RedisLock("test_key", redisClient);
+ *     try {
+ *         locker.lock(cacheLock);
+ *     }
+ *     finally {
+ *         locker.unlock(cacheLock);
+ *     }
+ * </pre></blackquote>
+ *
+ * @author Ben PY Tarng
+ * @see com.pytsoft.cachelock.beans.RedisLock
+ * @see com.pytsoft.cachelock.beans.MemcachedLock
+ * @since JDK 1.6
+ */
+public abstract class CacheLock {
 	protected String key;
 	protected String field;
 

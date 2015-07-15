@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
  * and <a href="http://memcached.org/">Memcached</a>
  * (with <a href="https://github.com/couchbase/spymemcached">spymemcached</a> lib) are implemented by default.
  * <p>
- * The required commands for the cache lock implementation are as follows:
+ * The required commands for the cache client implementation are as follows:
  * <ul>
  * <li> setnx
  * <li> hsetnx

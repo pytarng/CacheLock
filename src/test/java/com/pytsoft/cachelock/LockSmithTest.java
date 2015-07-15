@@ -8,7 +8,11 @@ import java.io.IOException;
 import java.util.UUID;
 
 /**
- * Created by Ben on 2015/7/2.
+ * Test cases class for {@code LockSmith}.
+ *
+ * @author Ben PY Tarng
+ * @see com.pytsoft.cachelock.LockSmith
+ * @since JDK 1.6
  */
 public abstract class LockSmithTest {
 

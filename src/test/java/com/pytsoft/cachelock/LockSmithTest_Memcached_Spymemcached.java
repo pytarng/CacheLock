@@ -10,7 +10,11 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 
 /**
- * Created by Ben on 2015/7/2.
+ * Test cases class for {@code LockSmith} for memcached server.
+ *
+ * @author Ben PY Tarng
+ * @see com.pytsoft.cachelock.LockSmith
+ * @since JDK 1.6
  */
 public class LockSmithTest_Memcached_Spymemcached extends LockSmithTest {
 
