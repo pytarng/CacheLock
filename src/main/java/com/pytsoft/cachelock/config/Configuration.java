@@ -8,7 +8,7 @@ package com.pytsoft.cachelock.config;
  * <li> initInterval - Sleep interval in milliseconds for lock acquisition process
  * <li> acquireTimeout - Maximum waiting time in milliseconds for lock acquisition process
  * <li> lockExpiration - Lifetime in milliseconds for a lock to stay valid
- * <li> priorityRatio - Sleep interval shrink ratio
+ * <li> priorityRatio - Sleep interval decreasing ratio
  * </ul>
  *
  * @author Ben PY Tarng

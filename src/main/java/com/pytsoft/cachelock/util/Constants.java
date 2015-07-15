@@ -34,7 +34,7 @@ public class Constants {
 	public static final long DEFAULT_ACQUIRE_TIMEOUT_MS = 10 * 1000;
 
 	/**
-	 * Default sleep interval shrink ratio to make the thread who waits longer wake up earlier.
+	 * Default sleep interval decreasing ratio to make the thread who waits longer wake up earlier.
 	 * <p>
 	 * This ratio means the sleep interval decreasing ratio, after each sleep,
 	 * the new interval will be the multiple of the previous interval and this ratio.
@@ -54,5 +54,5 @@ public class Constants {
 	 * Notice that the smaller the ratio is, the faster the interval achieves zero,
 	 * which mean the larger CPU resources cost.
 	 */
-	public static final float DEFAULT_PRIORITY_RATIO = 0.8f; // sleep interval shrink ratio
+	public static final float DEFAULT_PRIORITY_RATIO = 0.8f;
 }

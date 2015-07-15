@@ -156,7 +156,7 @@ public class LockSmith {
 			try {
 				Thread.sleep(nextInterval);
 
-				// Shrink next sleep interval to increase priority (handle greedy issue).
+				// Decrease next sleep interval to increase priority (handle greedy issue).
 				nextInterval = (long) (nextInterval * priorityRatio);
 
 			} catch (InterruptedException e) {
