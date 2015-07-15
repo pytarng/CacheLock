@@ -2,11 +2,11 @@ package com.pytsoft.cachelock;
 
 import com.pytsoft.cachelock.beans.CacheLock;
 import com.pytsoft.cachelock.beans.RedisClusterLock;
-import com.pytsoft.cachelock.connector.CacheClient;
 import com.pytsoft.cachelock.connector.RedisClusterClient;
 import com.pytsoft.cachelock.util.LockFailedException;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import org.junit.Before;
+import org.junit.Test;
 import redis.clients.jedis.HostAndPort;
 import redis.clients.jedis.JedisCluster;
 
@@ -40,6 +40,7 @@ public class LockSmithTest_RedisCluster_Jedis extends LockSmithTest {
 		this.cluster = new JedisCluster(jedisClusterNodes, config);
 	}
 
+	@Test
 	@Override
 	public void lock_then_unlock() {
 		CacheLock lock = null;
