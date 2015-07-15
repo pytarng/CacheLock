@@ -1,5 +1,7 @@
 package com.pytsoft.cachelock.connector;
 
+import com.pytsoft.cachelock.util.Constants;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,17 +12,17 @@ public interface CacheClient {
 
     Logger LOG = LoggerFactory.getLogger(CacheClient.class);
 
-    boolean setnx(String key, String value);
+    boolean setnx(String key, String value, int expSeconds);
 
-    boolean hsetnx(String key, String field, String value);
+    boolean hsetnx(String key, String field, String value, int expSeconds);
 
     String get(String key);
 
     String hget(String key, String field);
 
-    void set(String key, String value);
+    void set(String key, String value, int expSeconds);
 
-    void hset(String key, String field, String value);
+    void hset(String key, String field, String value, int expSeconds);
 
     void del(String key);
 

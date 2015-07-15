@@ -1,5 +1,6 @@
 package com.pytsoft.cachelock.connector;
 
+import com.pytsoft.cachelock.util.KeyUtils;
 import redis.clients.jedis.Jedis;
 
 /**
@@ -14,13 +15,29 @@ public class RedisClient implements CacheClient {
     }
 
     @Override
-    public boolean setnx(String key, String value) {
-        return this.jedis.setnx(key, value) == 1;
+    public boolean setnx(String key, String value, int expSeconds) {
+        if (this.jedis.setnx(key, value) == 1) {
+            this.jedis.expire(key, expSeconds);
+            return true;
+        }
+        return false;
     }
 
     @Override
-    public boolean hsetnx(String key, String field, String value) {
-        return this.jedis.hsetnx(key, field, value) == 1;
+    public boolean hsetnx(String key, String field, String value, int expSeconds) {
+        if (this.jedis.hsetnx(key, field, value) == 1) {
+            return true;
+        } else {
+            // expire is not possible in hsetnx case, need to parse expiration infomation from the lock value.
+            String lockValue = this.jedis.hget(key, field);
+            long expTime = KeyUtils.parseTime(lockValue);
+            // Check whether previous set value is already expired.
+            if (System.currentTimeMillis() - expTime > expSeconds * 1000) {
+                this.jedis.hdel(key, field);
+                return this.jedis.hsetnx(key, field, value) == 1;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -34,12 +51,13 @@ public class RedisClient implements CacheClient {
     }
 
     @Override
-    public void set(String key, String value) {
-        this.jedis.set(key, value);
+    public void set(String key, String value, int expSeconds) {
+        this.jedis.setex(key, expSeconds, value);
     }
 
     @Override
-    public void hset(String key, String field, String value) {
+    public void hset(String key, String field, String value, int expSeconds) {
+        // expire is not possible in hset case, need to store in the lock value.
         this.jedis.hset(key, field, value);
     }
 

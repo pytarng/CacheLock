@@ -17,9 +17,8 @@ public class MemcachedClient implements CacheClient {
     }
 
     @Override
-    public boolean setnx(String key, String value) {
-        OperationFuture<Boolean> result = this.client.add(key, 0, value);
-
+    public boolean setnx(String key, String value, int expSeconds) {
+        OperationFuture<Boolean> result = this.client.add(key, expSeconds, value);
         try {
             return result.get();
         } catch (Exception e) {
@@ -29,8 +28,8 @@ public class MemcachedClient implements CacheClient {
     }
 
     @Override
-    public boolean hsetnx(String key, String field, String value) {
-        return this.setnx(this.genHashKey(key, field), value);
+    public boolean hsetnx(String key, String field, String value, int expSeconds) {
+        return this.setnx(this.genHashKey(key, field), value, expSeconds);
     }
 
     @Override
@@ -44,13 +43,13 @@ public class MemcachedClient implements CacheClient {
     }
 
     @Override
-    public void set(String key, String value) {
-        this.client.set(key, 0, value);
+    public void set(String key, String value, int expSeconds) {
+        this.client.set(key, expSeconds, value);
     }
 
     @Override
-    public void hset(String key, String field, String value) {
-        this.set(this.genHashKey(key, field), value);
+    public void hset(String key, String field, String value, int expSeconds) {
+        this.set(this.genHashKey(key, field), value, expSeconds);
     }
 
     @Override

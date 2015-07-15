@@ -14,12 +14,16 @@ public class RedisClusterClient implements CacheClient {
     }
 
     @Override
-    public boolean setnx(String key, String value) {
-        return this.cluster.setnx(key, value) == 1;
+    public boolean setnx(String key, String value, int expSeconds) {
+        if (this.cluster.setnx(key, value) == 1) {
+            this.cluster.expire(key, expSeconds);
+        }
+        return false;
     }
 
     @Override
-    public boolean hsetnx(String key, String field, String value) {
+    public boolean hsetnx(String key, String field, String value, int expSeconds) {
+        // expire is not possible in hsetnx case, need to store in the lock value.
         return this.cluster.hsetnx(key, field, value) == 1;
     }
 
@@ -34,12 +38,13 @@ public class RedisClusterClient implements CacheClient {
     }
 
     @Override
-    public void set(String key, String value) {
-        this.cluster.set(key, value);
+    public void set(String key, String value, int expSeconds) {
+        this.cluster.setex(key, expSeconds, value);
     }
 
     @Override
-    public void hset(String key, String field, String value) {
+    public void hset(String key, String field, String value, int expSeconds) {
+        // expire is not possible in hset case, need to store in the lock value.
         this.cluster.hset(key, field, value);
     }
 

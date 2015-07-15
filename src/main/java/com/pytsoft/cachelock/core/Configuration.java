@@ -13,7 +13,7 @@ public class Configuration {
     public static final String LOCK_EXPIRATION = "Property::Lock_Expiration";
     public static final String PRIORITY_RATIO = "Property::Priority_Ratio";
 
-    protected Map<String, Object> configMap = new HashMap<>();
+    protected Map<String, Object> configMap = new HashMap<String, Object>();
 
     public void addProperty(String property, Object value) {
         this.configMap.put(property, value);
