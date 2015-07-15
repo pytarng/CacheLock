@@ -10,7 +10,6 @@ import java.util.UUID;
  * The {@code KeyUtils} class is the lock key / value handling utility.
  *
  * @author Ben PY Tarng
- *
  * @since JDK 1.6
  */
 public class KeyUtils {
@@ -23,7 +22,7 @@ public class KeyUtils {
 	 * The value is composed of a random UUID and expiration time separated by default namespace separator.
 	 *
 	 * @param lockExpire
-	 *      Lock expiration time in milliseconds
+	 * 		Lock expiration time in milliseconds
 	 *
 	 * @return Lock value as string
 	 */
@@ -38,7 +37,7 @@ public class KeyUtils {
 	 * If parameter is null or with invalid format => return 0.
 	 *
 	 * @param lockValue
-	 *      Lock value stored in lock key
+	 * 		Lock value stored in lock key
 	 *
 	 * @return Lock expiration time in milliseconds
 	 */
