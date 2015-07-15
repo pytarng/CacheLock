@@ -42,9 +42,11 @@ import org.apache.commons.lang3.StringUtils;
  * </pre></blackquote>
  *
  * @author Ben PY Tarng
+ *
  * @see com.pytsoft.cachelock.beans.CacheLock
  * @see com.pytsoft.cachelock.connector.CacheClient
  * @see com.pytsoft.cachelock.core.Configuration
+ *
  * @since JDK 1.6
  */
 public class LockSmith {
@@ -97,7 +99,7 @@ public class LockSmith {
         boolean isHash = lock.isHashLock();
         CacheClient client = lock.getClient();
 
-        // Extract detailed lock acquisition algorithm settings from configuration.
+        /** Extract detailed lock acquisition algorithm settings from configuration.*/
         long lockExpire = (Long) this.config.getProperty(Configuration.LOCK_EXPIRATION);
         long acquireTimeout = (Long) this.config.getProperty(Configuration.ACQUIRE_TIMEOUT);
         long nextInterval = (Long) this.config.getProperty(Configuration.INIT_INTERVAL);
@@ -152,6 +154,7 @@ public class LockSmith {
 
                 // Shrink next sleep interval to increase priority (handle greedy issue).
                 nextInterval = (long) (nextInterval * priorityRatio);
+
             } catch (InterruptedException e) {
                 throw new LockFailedException(String.format("Lock acquiring process for key[%s] interrupted unexpectedly! Failed!", key));
             }
@@ -170,7 +173,7 @@ public class LockSmith {
      *                             </ul>
      * @see com.pytsoft.cachelock.beans.CacheLock
      */
-    public void unlock(CacheLock lock) throws LockFailedException {
+    public void unlock(CacheLock lock) {
         // Do unlock while lock already acquired.
         if (lock != null && lock.isLocked()) {
 

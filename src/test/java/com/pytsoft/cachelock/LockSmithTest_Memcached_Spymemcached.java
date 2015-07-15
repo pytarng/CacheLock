@@ -23,25 +23,24 @@ public class LockSmithTest_Memcached_Spymemcached extends LockSmithTest {
     public void init() throws IOException {
         super.init();
 
-        this.memcachedClient = new MemcachedClient(new InetSocketAddress("192.168.8.213", 11211));
+        this.memcachedClient = new MemcachedClient(new InetSocketAddress(this.cacheServerHost, this.memcachedServerPort));
     }
 
     @Test
     @Override
     public void lock_then_unlock() {
-        String lockKey = "TEST_KEY_MEMCACHED_SPYMEMCACHED" + Constants.DEFAULT_SEPARATOR + UUID.randomUUID().toString();
         MemcachedLock lock = null;
         try {
-            lock = new MemcachedLock(lockKey, this.memcachedClient);
+            lock = new MemcachedLock(this.testTargetKey, this.memcachedClient);
             this.locker.lock(lock);
-            LOG.info(String.format("Lock acquired successfully for key[%s]!", lockKey));
+            LOG.info(String.format("Lock acquired successfully for key[%s]!", this.testTargetKey));
 
         } catch (LockFailedException e) {
-            LOG.error(String.format("Error occurs while trying to acquire lock for key[%s]!", lockKey), e);
+            LOG.error(String.format("Error occurs while trying to acquire lock for key[%s]!", this.testTargetKey), e);
 
         } finally {
             this.locker.unlock(lock);
-            LOG.info(String.format("Lock released successfully for key[%s]!", lockKey));
+            LOG.info(String.format("Lock released successfully for key[%s]!", this.testTargetKey));
         }
     }
 }

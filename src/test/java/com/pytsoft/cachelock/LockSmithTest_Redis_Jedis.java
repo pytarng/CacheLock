@@ -32,26 +32,25 @@ public class LockSmithTest_Redis_Jedis extends LockSmithTest {
         config.setMaxIdle(10);
         config.setMinIdle(5);
         config.setMaxWaitMillis(5000);
-        this.pool = new JedisPool(config, "192.168.8.213", 6379, 5000);
+        this.pool = new JedisPool(config, this.cacheServerHost, this.redisServerPort, 5000);
     }
 
     @Test
     @Override
     public void lock_then_unlock() {
-        String lockKey = "TEST_KEY_REDIS_JEDIS" + Constants.DEFAULT_SEPARATOR + UUID.randomUUID().toString();
         RedisLock lock = null;
         try {
             Jedis jedis = this.pool.getResource();
-            lock = new RedisLock(lockKey, jedis);
+            lock = new RedisLock(this.testTargetKey, jedis);
             this.locker.lock(lock);
-            LOG.info(String.format("Lock acquired successfully for key[%s]!", lockKey));
+            LOG.info(String.format("Lock acquired successfully for key[%s]!", this.testTargetKey));
 
         } catch (LockFailedException e) {
-            LOG.error(String.format("Error occurs while trying to acquire lock for key[%s]!", lockKey), e);
+            LOG.error(String.format("Error occurs while trying to acquire lock for key[%s]!", this.testTargetKey), e);
 
         } finally {
             this.locker.unlock(lock);
-            LOG.info(String.format("Lock released successfully for key[%s]!", lockKey));
+            LOG.info(String.format("Lock released successfully for key[%s]!", this.testTargetKey));
         }
     }
 }
