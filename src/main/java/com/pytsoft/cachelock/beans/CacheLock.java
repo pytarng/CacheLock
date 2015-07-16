@@ -24,6 +24,7 @@ import com.pytsoft.cachelock.util.Constants;
  *
  * @author Ben PY Tarng
  * @see com.pytsoft.cachelock.beans.RedisLock
+ * @see com.pytsoft.cachelock.beans.RedisClusterLock
  * @see com.pytsoft.cachelock.beans.MemcachedLock
  * @since JDK 1.6
  */
