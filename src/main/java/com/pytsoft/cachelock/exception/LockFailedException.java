@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pytsoft.cachelock.util;
+package com.pytsoft.cachelock.exception;
 
 /**
  * The {@code LockFailedException} class is the exception for lock acquisition failure.

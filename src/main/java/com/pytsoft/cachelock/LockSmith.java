@@ -16,12 +16,12 @@
 
 package com.pytsoft.cachelock;
 
-import com.pytsoft.cachelock.beans.CacheLock;
+import com.pytsoft.cachelock.core.CacheLock;
 import com.pytsoft.cachelock.config.Configuration;
 import com.pytsoft.cachelock.config.DefaultConfiguration;
 import com.pytsoft.cachelock.connector.CacheClient;
 import com.pytsoft.cachelock.util.KeyUtils;
-import com.pytsoft.cachelock.util.LockFailedException;
+import com.pytsoft.cachelock.exception.LockFailedException;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -59,7 +59,7 @@ import org.apache.commons.lang3.StringUtils;
  * </pre></blackquote>
  *
  * @author Ben PY Tarng
- * @see com.pytsoft.cachelock.beans.CacheLock
+ * @see com.pytsoft.cachelock.core.CacheLock
  * @see com.pytsoft.cachelock.connector.CacheClient
  * @see com.pytsoft.cachelock.config.Configuration
  * @since JDK 1.6
@@ -100,7 +100,7 @@ public class LockSmith {
 	 *
 	 * @param lock
 	 * 		Lock target with all required information (such as key, cache server, ...) inside
-	 * 		(check {@linkplain com.pytsoft.cachelock.beans.CacheLock})
+	 * 		(check {@linkplain com.pytsoft.cachelock.core.CacheLock})
 	 *
 	 * @throws LockFailedException
 	 * 		If any of the following is true:
@@ -110,7 +110,7 @@ public class LockSmith {
 	 * 		<li> cache server is unachievable due to network issues
 	 * 		<li> cache server is inaccessible due to permission issues
 	 * 		</ul>
-	 * @see com.pytsoft.cachelock.beans.CacheLock
+	 * @see com.pytsoft.cachelock.core.CacheLock
 	 */
 	public void lock(CacheLock lock) throws LockFailedException {
 
@@ -172,7 +172,7 @@ public class LockSmith {
 			try {
 				Thread.sleep(nextInterval);
 
-				// Decrease next sleep interval to increase priority (handle greedy issue).
+				// Decrease next sleep interval to increase priority (handle starvation issue).
 				nextInterval = (long) (nextInterval * priorityRatio);
 
 			} catch (InterruptedException e) {
@@ -194,7 +194,7 @@ public class LockSmith {
 	 * 		<li> cache server is unachievable due to network issues
 	 * 		<li> cache server is inaccessible due to permission issues
 	 * 		</ul>
-	 * @see com.pytsoft.cachelock.beans.CacheLock
+	 * @see com.pytsoft.cachelock.core.CacheLock
 	 */
 	public void unlock(CacheLock lock) {
 		// Do unlock while lock already acquired.

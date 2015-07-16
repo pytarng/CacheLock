@@ -14,24 +14,24 @@
  * limitations under the License.
  */
 
-package com.pytsoft.cachelock.beans;
+package com.pytsoft.cachelock.core;
 
-import com.pytsoft.cachelock.connector.RedisClusterClient;
+import com.pytsoft.cachelock.connector.MemcachedClient;
 
 /**
- * The {@code RedisLock} class is the Redis-cluster child class of {@code CacheLock} with usage of {@code RedisClusterClient}.
+ * The {@code MemcachedLock} class is the Memcached child class of {@code CacheLock} with usage of {@code MemcachedClient}.
  *
  * @author Ben PY Tarng
- * @see com.pytsoft.cachelock.beans.CacheLock
+ * @see com.pytsoft.cachelock.core.CacheLock
  * @since JDK 1.6
  */
-public class RedisClusterLock extends CacheLock {
+public class MemcachedLock extends CacheLock {
 
-	public RedisClusterLock(String key, RedisClusterClient client) {
+	public MemcachedLock(String key, MemcachedClient client) {
 		super(key, client);
 	}
 
-	public RedisClusterLock(String key, String field, RedisClusterClient client) {
+	public MemcachedLock(String key, String field, MemcachedClient client) {
 		super(key, field, client);
 	}
 }

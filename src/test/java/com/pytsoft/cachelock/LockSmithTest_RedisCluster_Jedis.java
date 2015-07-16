@@ -16,10 +16,10 @@
 
 package com.pytsoft.cachelock;
 
-import com.pytsoft.cachelock.beans.CacheLock;
-import com.pytsoft.cachelock.beans.RedisClusterLock;
+import com.pytsoft.cachelock.core.CacheLock;
+import com.pytsoft.cachelock.core.RedisClusterLock;
 import com.pytsoft.cachelock.connector.RedisClusterClient;
-import com.pytsoft.cachelock.util.LockFailedException;
+import com.pytsoft.cachelock.exception.LockFailedException;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import org.junit.Before;
 import org.junit.Test;

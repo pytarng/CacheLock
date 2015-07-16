@@ -16,8 +16,8 @@
 
 package com.pytsoft.cachelock;
 
-import com.pytsoft.cachelock.beans.MemcachedLock;
-import com.pytsoft.cachelock.util.LockFailedException;
+import com.pytsoft.cachelock.core.MemcachedLock;
+import com.pytsoft.cachelock.exception.LockFailedException;
 import net.spy.memcached.MemcachedClient;
 import org.junit.Before;
 import org.junit.Test;

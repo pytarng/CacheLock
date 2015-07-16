@@ -16,9 +16,9 @@
 
 package com.pytsoft.cachelock;
 
-import com.pytsoft.cachelock.beans.RedisLock;
+import com.pytsoft.cachelock.core.RedisLock;
 import com.pytsoft.cachelock.connector.RedisClient;
-import com.pytsoft.cachelock.util.LockFailedException;
+import com.pytsoft.cachelock.exception.LockFailedException;
 import org.junit.Before;
 import org.junit.Test;
 import redis.clients.jedis.Jedis;
