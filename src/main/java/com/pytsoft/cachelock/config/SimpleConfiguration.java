@@ -14,24 +14,22 @@
  * limitations under the License.
  */
 
-package com.pytsoft.cachelock.core;
+package com.pytsoft.cachelock.config;
 
-import com.pytsoft.cachelock.connector.RedisClusterClient;
+import com.pytsoft.cachelock.util.Constants;
 
 /**
- * The {@code RedisLock} class is the Redis-cluster child class of {@code CacheLock} with usage of {@code RedisClusterClient}.
+ * The {@code SimpleConfiguration} is the child configuration class with base values (without starvation issue handling).
  *
  * @author Ben PY Tarng
- * @see com.pytsoft.cachelock.core.CacheLock
+ * @see com.pytsoft.cachelock.util.Constants
  * @since JDK 1.6
  */
-public class RedisClusterLock extends CacheLock {
+public class SimpleConfiguration extends DefaultConfiguration {
 
-    public RedisClusterLock(String key, RedisClusterClient client) {
-        super(key, client);
-    }
-
-    public RedisClusterLock(String key, String field, RedisClusterClient client) {
-        super(key, field, client);
+    public SimpleConfiguration() {
+        this.setInitInterval(Constants.DEFAULT_ACQUIRE_INTERVAL_MS);
+        this.setLockExpiration(Constants.DEFAULT_LOCK_EXPIRE_MS);
+        this.setPriorityRatio(1);
     }
 }

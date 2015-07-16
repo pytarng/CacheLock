@@ -16,8 +16,14 @@
 
 package com.pytsoft.cachelock.core;
 
+import com.pytsoft.cachelock.config.Configuration;
 import com.pytsoft.cachelock.connector.CacheClient;
+import com.pytsoft.cachelock.exception.LockFailedException;
 import com.pytsoft.cachelock.util.Constants;
+import com.pytsoft.cachelock.util.KeyUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
@@ -26,275 +32,340 @@ import java.util.concurrent.locks.Lock;
 /**
  * The {@code CacheLock} abstract class is the distributed implementation of the {@code java.util.concurrent.locks.Lock} interface.
  * <p>
- * There are two kinds of constructor, with two arguments (key and client) and three arguments (key, field, and client)
- * separately, represents for key lock and hash field lock.
+ * <p>The lock target key, field, and user defined configurations are defined on constructor. If no user defined
+ * configuration is present, default configuration will be used.
  * <p>
- * The lock class and cache client class should be in pairs, and this parent abstract class should not be used directly.
+ * <p>The lock class and cache client class should be in pairs, and this parent abstract class should not be used directly.
  * For example:
  * <blackquote><pre>
  *     CacheClient redisClient = new RedisClient(jedis);
  *     CacheLock cacheLock = new RedisLock("test_key", redisClient);
+ *     locker.lock(cacheLock);
  *     try {
- *         locker.lock(cacheLock);
+ *         // Operations...
  *     }
  *     finally {
  *         locker.unlock(cacheLock);
  *     }
  * </pre></blackquote>
+ * <p>
+ * <p>
+ * <p>Detailed configuration settings such as lock expiration time interval, sleep interval are also supported.
+ * The settings can be configured through {@code Configuration} class, for example:
+ * <blackquote><pre>
+ *     Configuration config = new Configuration();
+ *     config.setLockExpiration(10000);
+ *     config.setInitInterval(200);
+ *     CacheLock cacheLock = new RedisLock("test_key", redisClient, config);
+ * </pre></blackquote>
  *
  * @author Ben PY Tarng
+ * @see java.util.concurrent.locks.Lock
+ * @see com.pytsoft.cachelock.config.Configuration
  * @see com.pytsoft.cachelock.core.RedisLock
  * @see com.pytsoft.cachelock.core.RedisClusterLock
  * @see com.pytsoft.cachelock.core.MemcachedLock
  * @since JDK 1.6
  */
 public class CacheLock implements Lock {
-	protected String key;
-	protected String field;
 
-	protected boolean hashLock = false;
-	protected boolean locked = false;
+    protected final Logger LOG = LoggerFactory.getLogger(this.getClass());
 
-	protected CacheClient client;
+    protected String key;
+    protected String field;
+    protected Configuration config;
 
-	public CacheLock(String key, CacheClient client) {
-		this.key = Constants.CACHE_KEY_HEAD_LOCKER + key;
-		this.client = client;
-	}
+    protected boolean hashLock = false;
+    protected boolean locked = false;
 
-	public CacheLock(String key, String field, CacheClient client) {
-		this(key, client);
-		this.field = Constants.CACHE_KEY_HEAD_LOCKER + field;
-		this.hashLock = true;
-	}
+    protected CacheClient client;
 
-	public String getKey() {
-		return key;
-	}
+    public CacheLock(String key, CacheClient client) {
+        this.key = Constants.CACHE_KEY_HEAD_LOCKER + key;
+        this.client = client;
+    }
 
-	public String getField() {
-		return field;
-	}
+    public CacheLock(String key, CacheClient client, Configuration config) {
+        this(key, client);
+        this.config = config;
+    }
 
-	public boolean isHashLock() {
-		return hashLock;
-	}
+    public CacheLock(String key, String field, CacheClient client) {
+        this(key, client);
+        this.field = Constants.CACHE_KEY_HEAD_LOCKER + field;
+        this.hashLock = true;
+    }
 
-	public boolean isLocked() {
-		return locked;
-	}
+    public CacheLock(String key, String field, CacheClient client, Configuration config) {
+        this(key, field, client);
+        this.config = config;
+    }
 
-	public void setLocked(boolean locked) {
-		this.locked = locked;
-	}
+    public String getKey() {
+        return key;
+    }
 
-	public CacheClient getClient() {
-		return client;
-	}
+    public String getField() {
+        return field;
+    }
 
-	/**
-	 * Acquires the lock.
-	 *
-	 * <p>If the lock is not available then the current thread becomes
-	 * disabled for thread scheduling purposes and lies dormant until the
-	 * lock has been acquired.
-	 */
-	@Override
-	public void lock() {
+    public boolean isHashLock() {
+        return hashLock;
+    }
 
-	}
+    public boolean isLocked() {
+        return locked;
+    }
 
-	/**
-	 * Acquires the lock unless the current thread is
-	 * {@linkplain Thread#interrupt interrupted}.
-	 *
-	 * <p>Acquires the lock if it is available and returns immediately.
-	 *
-	 * <p>If the lock is not available then the current thread becomes
-	 * disabled for thread scheduling purposes and lies dormant until
-	 * one of two things happens:
-	 *
-	 * <ul>
-	 * <li>The lock is acquired by the current thread; or
-	 * <li>Some other thread {@linkplain Thread#interrupt interrupts} the
-	 * current thread, and interruption of lock acquisition is supported.
-	 * </ul>
-	 *
-	 * <p>If the current thread:
-	 * <ul>
-	 * <li>has its interrupted status set on entry to this method; or
-	 * <li>is {@linkplain Thread#interrupt interrupted} while acquiring the
-	 * lock, and interruption of lock acquisition is supported,
-	 * </ul>
-	 * then {@link InterruptedException} is thrown and the current thread's
-	 * interrupted status is cleared.
-	 *
-	 * <p><b>Implementation Considerations</b>
-	 *
-	 * <p>The ability to interrupt a lock acquisition in some
-	 * implementations may not be possible, and if possible may be an
-	 * expensive operation.  The programmer should be aware that this
-	 * may be the case. An implementation should document when this is
-	 * the case.
-	 *
-	 * <p>An implementation can favor responding to an interrupt over
-	 * normal method return.
-	 *
-	 * <p>A {@code Lock} implementation may be able to detect
-	 * erroneous use of the lock, such as an invocation that would
-	 * cause deadlock, and may throw an (unchecked) exception in such
-	 * circumstances.  The circumstances and the exception type must
-	 * be documented by that {@code Lock} implementation.
-	 *
-	 * @throws InterruptedException
-	 * 		if the current thread is
-	 * 		interrupted while acquiring the lock (and interruption
-	 * 		of lock acquisition is supported)
-	 */
-	@Override
-	public void lockInterruptibly() throws InterruptedException {
+    public void setLocked(boolean locked) {
+        this.locked = locked;
+    }
 
-	}
+    public CacheClient getClient() {
+        return client;
+    }
 
-	/**
-	 * Acquires the lock only if it is free at the time of invocation.
-	 *
-	 * <p>Acquires the lock if it is available and returns immediately
-	 * with the value {@code true}.
-	 * If the lock is not available then this method will return
-	 * immediately with the value {@code false}.
-	 *
-	 * <p>A typical usage idiom for this method would be:
-	 * <pre> {@code
-	 * Lock lock = ...;
-	 * if (lock.tryLock()) {
-	 *   try {
-	 *     // manipulate protected state
-	 *   } finally {
-	 *     lock.unlock();
-	 *   }
-	 * } else {
-	 *   // perform alternative actions
-	 * }}</pre>
-	 *
-	 * This usage ensures that the lock is unlocked if it was acquired, and
-	 * doesn't try to unlock if the lock was not acquired.
-	 *
-	 * @return {@code true} if the lock was acquired and
-	 * {@code false} otherwise
-	 */
-	@Override
-	public boolean tryLock() {
-		return false;
-	}
+    /**
+     * Acquires the lock.
+     * <p>
+     * <p>If the lock is not available then the current thread becomes
+     * disabled for thread scheduling purposes and lies dormant until the
+     * lock has been acquired.
+     */
+    @Override
+    public void lock() {
+        try {
+            this.tryLock(10, TimeUnit.DAYS);
+        } catch (InterruptedException e) {
+            LOG.error(String.format("Unexpected interrupted exception!", e));
+        }
+    }
 
-	/**
-	 * Acquires the lock if it is free within the given waiting time and the
-	 * current thread has not been {@linkplain Thread#interrupt interrupted}.
-	 *
-	 * <p>If the lock is available this method returns immediately
-	 * with the value {@code true}.
-	 * If the lock is not available then
-	 * the current thread becomes disabled for thread scheduling
-	 * purposes and lies dormant until one of three things happens:
-	 * <ul>
-	 * <li>The lock is acquired by the current thread; or
-	 * <li>Some other thread {@linkplain Thread#interrupt interrupts} the
-	 * current thread, and interruption of lock acquisition is supported; or
-	 * <li>The specified waiting time elapses
-	 * </ul>
-	 *
-	 * <p>If the lock is acquired then the value {@code true} is returned.
-	 *
-	 * <p>If the current thread:
-	 * <ul>
-	 * <li>has its interrupted status set on entry to this method; or
-	 * <li>is {@linkplain Thread#interrupt interrupted} while acquiring
-	 * the lock, and interruption of lock acquisition is supported,
-	 * </ul>
-	 * then {@link InterruptedException} is thrown and the current thread's
-	 * interrupted status is cleared.
-	 *
-	 * <p>If the specified waiting time elapses then the value {@code false}
-	 * is returned.
-	 * If the time is
-	 * less than or equal to zero, the method will not wait at all.
-	 *
-	 * <p><b>Implementation Considerations</b>
-	 *
-	 * <p>The ability to interrupt a lock acquisition in some implementations
-	 * may not be possible, and if possible may
-	 * be an expensive operation.
-	 * The programmer should be aware that this may be the case. An
-	 * implementation should document when this is the case.
-	 *
-	 * <p>An implementation can favor responding to an interrupt over normal
-	 * method return, or reporting a timeout.
-	 *
-	 * <p>A {@code Lock} implementation may be able to detect
-	 * erroneous use of the lock, such as an invocation that would cause
-	 * deadlock, and may throw an (unchecked) exception in such circumstances.
-	 * The circumstances and the exception type must be documented by that
-	 * {@code Lock} implementation.
-	 *
-	 * @param time
-	 * 		the maximum time to wait for the lock
-	 * @param unit
-	 * 		the time unit of the {@code time} argument
-	 *
-	 * @return {@code true} if the lock was acquired and {@code false}
-	 * if the waiting time elapsed before the lock was acquired
-	 *
-	 * @throws InterruptedException
-	 * 		if the current thread is interrupted
-	 * 		while acquiring the lock (and interruption of lock
-	 * 		acquisition is supported)
-	 */
-	@Override
-	public boolean tryLock(long time, TimeUnit unit) throws InterruptedException {
-		return false;
-	}
+    /**
+     * Acquires the lock unless the current thread is
+     * {@linkplain Thread#interrupt interrupted}.
+     * <p>
+     * <p>Acquires the lock if it is available and returns immediately.
+     * <p>
+     * <p>If the lock is not available then the current thread becomes
+     * disabled for thread scheduling purposes and lies dormant until
+     * one of two things happens:
+     * <p>
+     * <ul>
+     * <li>The lock is acquired by the current thread; or
+     * <li>Some other thread {@linkplain Thread#interrupt interrupts} the
+     * current thread, and interruption of lock acquisition is supported.
+     * </ul>
+     * <p>
+     * <p>If the current thread:
+     * <ul>
+     * <li>has its interrupted status set on entry to this method; or
+     * <li>is {@linkplain Thread#interrupt interrupted} while acquiring the
+     * lock, and interruption of lock acquisition is supported,
+     * </ul>
+     * then {@link InterruptedException} is thrown and the current thread's
+     * interrupted status is cleared.
+     *
+     * @throws InterruptedException
+     *         if the current thread is
+     *         interrupted while acquiring the lock (and interruption
+     *         of lock acquisition is supported)
+     */
+    @Override
+    public void lockInterruptibly() throws InterruptedException {
+        this.tryLock(10, TimeUnit.DAYS);
+    }
 
-	/**
-	 * Releases the lock.
-	 *
-	 * <p><b>Implementation Considerations</b>
-	 *
-	 * <p>A {@code Lock} implementation will usually impose
-	 * restrictions on which thread can release a lock (typically only the
-	 * holder of the lock can release it) and may throw
-	 * an (unchecked) exception if the restriction is violated.
-	 * Any restrictions and the exception
-	 * type must be documented by that {@code Lock} implementation.
-	 */
-	@Override
-	public void unlock() {
+    /**
+     * Acquires the lock only if it is free at the time of invocation.
+     * <p>
+     * <p>Acquires the lock if it is available and returns immediately
+     * with the value {@code true}.
+     * If the lock is not available then this method will return
+     * immediately with the value {@code false}.
+     * <p>
+     * <p>A typical usage idiom for this method would be:
+     * <pre> {@code
+     * Lock lock = ...;
+     * if (lock.tryLock()) {
+     *   try {
+     *     // manipulate protected state
+     *   } finally {
+     *     lock.unlock();
+     *   }
+     * } else {
+     *   // perform alternative actions
+     * }}</pre>
+     * <p>
+     * This usage ensures that the lock is unlocked if it was acquired, and
+     * doesn't try to unlock if the lock was not acquired.
+     *
+     * @return {@code true} if the lock was acquired and
+     * {@code false} otherwise
+     */
+    @Override
+    public boolean tryLock() {
+        try {
+            return this.tryLock(0, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            LOG.error(String.format("Unexpected interrupted exception!", e));
+            return false;
+        }
+    }
 
-	}
+    /**
+     * Acquires the lock if it is free within the given waiting time and the
+     * current thread has not been {@linkplain Thread#interrupt interrupted}.
+     * <p>
+     * <p>If the lock is available this method returns immediately
+     * with the value {@code true}.
+     * If the lock is not available then
+     * the current thread becomes disabled for thread scheduling
+     * purposes and lies dormant until one of three things happens:
+     * <ul>
+     * <li>The lock is acquired by the current thread; or
+     * <li>Some other thread {@linkplain Thread#interrupt interrupts} the
+     * current thread, and interruption of lock acquisition is supported; or
+     * <li>The specified waiting time elapses
+     * </ul>
+     * <p>
+     * <p>If the lock is acquired then the value {@code true} is returned.
+     * <p>
+     * <p>If the current thread:
+     * <ul>
+     * <li>has its interrupted status set on entry to this method; or
+     * <li>is {@linkplain Thread#interrupt interrupted} while acquiring
+     * the lock, and interruption of lock acquisition is supported,
+     * </ul>
+     * then {@link InterruptedException} is thrown and the current thread's
+     * interrupted status is cleared.
+     * <p>
+     * <p>If the specified waiting time elapses then the value {@code false}
+     * is returned.
+     * If the time is
+     * less than or equal to zero, the method will not wait at all.
+     *
+     * @param time
+     *         the maximum time to wait for the lock
+     * @param unit
+     *         the time unit of the {@code time} argument
+     *
+     * @return {@code true} if the lock was acquired and {@code false}
+     * if the waiting time elapsed before the lock was acquired
+     *
+     * @throws InterruptedException
+     *         if the current thread is interrupted
+     *         while acquiring the lock (and interruption of lock
+     *         acquisition is supported)
+     */
+    @Override
+    public boolean tryLock(long time, TimeUnit unit) throws InterruptedException {
+        // Generate lock value with expiration time information.
+        long lockExpire = this.config.getLockExpiration();
+        int expSeconds = (int) (lockExpire / 1000);
+        String lockValue = KeyUtils.genLockValue(lockExpire);
 
-	/**
-	 * Returns a new {@link Condition} instance that is bound to this
-	 * {@code Lock} instance.
-	 *
-	 * <p>Before waiting on the condition the lock must be held by the
-	 * current thread.
-	 * A call to {@link Condition#await()} will atomically release the lock
-	 * before waiting and re-acquire the lock before the wait returns.
-	 *
-	 * <p><b>Implementation Considerations</b>
-	 *
-	 * <p>The exact operation of the {@link Condition} instance depends on
-	 * the {@code Lock} implementation and must be documented by that
-	 * implementation.
-	 *
-	 * @return A new {@link Condition} instance for this {@code Lock} instance
-	 *
-	 * @throws UnsupportedOperationException
-	 * 		if this {@code Lock}
-	 * 		implementation does not support conditions
-	 */
-	@Override
-	public Condition newCondition() {
-		throw new UnsupportedOperationException();
-	}
+        // Get lock acquisition process algorithm detailed settings from config.
+        long nextInterval = this.config.getInitInterval();
+        float priorityRatio = this.config.getPriorityRatio();
+
+        // Record lock acquisition process begin time.
+        long acquireTimeout = TimeUnit.MILLISECONDS.convert(time, unit);
+        long begin = System.currentTimeMillis();
+        while (true) {
+            long current = System.currentTimeMillis();
+
+            // Check whether already exceeds lock acquisition timeout.
+            if (current - begin > acquireTimeout) {
+                // Already timeout.
+                LOG.error(String.format("Time out! Acquire key for target [%s, %s] failed.", this.key, this.field));
+                return false;
+            }
+
+            // Try to set lock target key with setnx (set if not existed) command.
+            boolean set;
+            if (!this.hashLock) {
+                set = this.client.setnx(this.key, lockValue, expSeconds);
+            } else {
+                set = this.client.hsetnx(this.key, this.field, lockValue, expSeconds);
+            }
+
+            // If return value is True => lock acquired successfully.
+            if (set) {
+                this.locked = true;
+                return true;
+            }
+
+            // Check whether locker already own this key (handle false-positive issue due to concurrent).
+            String prevLockValue;
+            if (!this.hashLock) {
+                prevLockValue = this.client.get(this.key);
+            } else {
+                prevLockValue = this.client.hget(this.key, this.field);
+            }
+
+            // If current value stored in target key is equal to lock value => lock already acquired successfully.
+            if (StringUtils.equals(prevLockValue, lockValue)) {
+                this.locked = true;
+                return true;
+            }
+
+            // If lock not acquired => sleep a short while and wait for the next round.
+            try {
+                Thread.sleep(nextInterval);
+
+                // Decrease next sleep interval to increase priority (handle starvation issue).
+                nextInterval = (long) (nextInterval * priorityRatio);
+
+            } catch (InterruptedException e) {
+                LOG.error(String.format("Lock acquiring process for target [%s, %s] interrupted unexpectedly! Failed!", this.key, this.field));
+                return false;
+            }
+        }
+    }
+
+    /**
+     * Releases the lock.
+     */
+    @Override
+    public void unlock() {
+        // Do unlock while lock already acquired.
+        if (this.locked) {
+
+            // Delete target key/field to release lock.
+            if (!this.hashLock) {
+                this.client.del(this.key);
+            } else {
+                this.client.hdel(this.key, this.field);
+            }
+
+            this.locked = false;
+        }
+    }
+
+    /**
+     * Returns a new {@link Condition} instance that is bound to this
+     * {@code Lock} instance.
+     * <p>
+     * <p>This lock does not support conditions.
+     *
+     * @return A new {@link Condition} instance for this {@code Lock} instance
+     *
+     * @throws UnsupportedOperationException
+     *         if this {@code Lock}
+     *         implementation does not support conditions
+     */
+    @Override
+    public Condition newCondition() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public String toString() {
+        return "CacheLock{" +
+                "key='" + key + '\'' +
+                ", field='" + field + '\'' +
+                ", config=" + config +
+                '}';
+    }
 }

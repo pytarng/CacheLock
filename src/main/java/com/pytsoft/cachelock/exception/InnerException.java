@@ -22,5 +22,5 @@ package com.pytsoft.cachelock.exception;
  * @author Ben PY Tarng
  * @since JDK 1.6
  */
-public class InnerException extends  RuntimeException {
+public class InnerException extends RuntimeException {
 }

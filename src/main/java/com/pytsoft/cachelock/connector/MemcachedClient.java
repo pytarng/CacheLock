@@ -28,54 +28,54 @@ import net.spy.memcached.internal.OperationFuture;
  */
 public class MemcachedClient implements CacheClient {
 
-	protected net.spy.memcached.MemcachedClient client;
+    protected net.spy.memcached.MemcachedClient client;
 
-	public MemcachedClient(net.spy.memcached.MemcachedClient client) {
-		this.client = client;
-	}
+    public MemcachedClient(net.spy.memcached.MemcachedClient client) {
+        this.client = client;
+    }
 
-	@Override
-	public boolean setnx(String key, String value, int expSeconds) {
-		// Use add method to implement set if not exists API.
-		OperationFuture<Boolean> result = this.client.add(key, expSeconds, value);
-		try {
-			return result.get();
-		} catch (Exception e) {
-			LOG.error("Error occurs while performing setnx for key[%s] and value[%s], reason:[%s]", key, value, e.getMessage());
-			return false;
-		}
-	}
+    @Override
+    public boolean setnx(String key, String value, int expSeconds) {
+        // Use add method to implement set if not exists API.
+        OperationFuture<Boolean> result = this.client.add(key, expSeconds, value);
+        try {
+            return result.get();
+        } catch (Exception e) {
+            LOG.error("Error occurs while performing setnx for key[%s] and value[%s], reason:[%s]", key, value, e.getMessage());
+            return false;
+        }
+    }
 
-	@Override
-	public boolean hsetnx(String key, String field, String value, int expSeconds) {
-		// Convert key and field into a new key to implement hset API
-		return this.setnx(this.genHashKey(key, field), value, expSeconds);
-	}
+    @Override
+    public boolean hsetnx(String key, String field, String value, int expSeconds) {
+        // Convert key and field into a new key to implement hset API
+        return this.setnx(this.genHashKey(key, field), value, expSeconds);
+    }
 
-	@Override
-	public String get(String key) {
-		return this.client.get(key).toString();
-	}
+    @Override
+    public String get(String key) {
+        return this.client.get(key).toString();
+    }
 
-	@Override
-	public String hget(String key, String field) {
-		// Get value from a new key converted from key and field to implement hget API
-		return this.get(this.genHashKey(key, field)).toString();
-	}
+    @Override
+    public String hget(String key, String field) {
+        // Get value from a new key converted from key and field to implement hget API
+        return this.get(this.genHashKey(key, field)).toString();
+    }
 
-	@Override
-	public void del(String key) {
-		this.client.delete(key);
-	}
+    @Override
+    public void del(String key) {
+        this.client.delete(key);
+    }
 
-	@Override
-	public void hdel(String key, String field) {
-		// Convert key and field into a new key to implement hdel API
-		this.del(this.genHashKey(key, field));
-	}
+    @Override
+    public void hdel(String key, String field) {
+        // Convert key and field into a new key to implement hdel API
+        this.del(this.genHashKey(key, field));
+    }
 
-	// Generate a new key depends on key, field, and default separator.
-	private String genHashKey(String key, String field) {
-		return key + Constants.DEFAULT_SEPARATOR + field;
-	}
+    // Generate a new key depends on key, field, and default separator.
+    private String genHashKey(String key, String field) {
+        return key + Constants.DEFAULT_SEPARATOR + field;
+    }
 }

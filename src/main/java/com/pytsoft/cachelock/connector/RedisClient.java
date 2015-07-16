@@ -28,61 +28,61 @@ import redis.clients.jedis.Jedis;
  */
 public class RedisClient implements CacheClient {
 
-	protected Jedis jedis;
+    protected Jedis jedis;
 
-	public RedisClient(Jedis jedis) {
-		this.jedis = jedis;
-	}
+    public RedisClient(Jedis jedis) {
+        this.jedis = jedis;
+    }
 
-	@Override
-	public boolean setnx(String key, String value, int expSeconds) {
-		if (this.jedis.setnx(key, value) == 1) {
+    @Override
+    public boolean setnx(String key, String value, int expSeconds) {
+        if (this.jedis.setnx(key, value) == 1) {
 
-			// Add key-value pair expiration settings to redis server.
-			this.jedis.expire(key, expSeconds);
-			return true;
-		}
-		return false;
-	}
+            // Add key-value pair expiration settings to redis server.
+            this.jedis.expire(key, expSeconds);
+            return true;
+        }
+        return false;
+    }
 
-	@Override
-	public boolean hsetnx(String key, String field, String value, int expSeconds) {
-		if (this.jedis.hsetnx(key, field, value) == 1) {
-			return true;
-		} else {
-			// Expiration setting is not supported in hsetnx case, need further operation.
-			// Parse expiration time from stored value in key-value pair.
-			String lockValue = this.hget(key, field);
-			long expTime = KeyUtils.parseTime(lockValue);
+    @Override
+    public boolean hsetnx(String key, String field, String value, int expSeconds) {
+        if (this.jedis.hsetnx(key, field, value) == 1) {
+            return true;
+        } else {
+            // Expiration setting is not supported in hsetnx case, need further operation.
+            // Parse expiration time from stored value in key-value pair.
+            String lockValue = this.hget(key, field);
+            long expTime = KeyUtils.parseTime(lockValue);
 
-			// Check whether previous set value is already expired.
-			if (System.currentTimeMillis() - expTime > expSeconds * 1000) {
+            // Check whether previous set value is already expired.
+            if (System.currentTimeMillis() - expTime > expSeconds * 1000) {
 
-				// If already expired, delete field and hset again.
-				this.hdel(key, field);
-				return this.jedis.hsetnx(key, field, value) == 1;
-			}
-		}
-		return false;
-	}
+                // If already expired, delete field and hset again.
+                this.hdel(key, field);
+                return this.jedis.hsetnx(key, field, value) == 1;
+            }
+        }
+        return false;
+    }
 
-	@Override
-	public String get(String key) {
-		return this.jedis.get(key);
-	}
+    @Override
+    public String get(String key) {
+        return this.jedis.get(key);
+    }
 
-	@Override
-	public String hget(String key, String field) {
-		return this.jedis.hget(key, field);
-	}
+    @Override
+    public String hget(String key, String field) {
+        return this.jedis.hget(key, field);
+    }
 
-	@Override
-	public void del(String key) {
-		this.jedis.del(key);
-	}
+    @Override
+    public void del(String key) {
+        this.jedis.del(key);
+    }
 
-	@Override
-	public void hdel(String key, String field) {
-		this.jedis.hdel(key, field);
-	}
+    @Override
+    public void hdel(String key, String field) {
+        this.jedis.hdel(key, field);
+    }
 }

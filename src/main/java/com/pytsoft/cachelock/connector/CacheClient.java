@@ -22,12 +22,12 @@ import org.slf4j.LoggerFactory;
 /**
  * The {@code CacheClient} interface defines the required commands for cache client to implement.
  * <p>
- * <a href="http://redis.io/">Redis</a> (with <a href="https://github.com/xetorthio/jedis">Jedis</a> lib)
+ * <p><a href="http://redis.io/">Redis</a> (with <a href="https://github.com/xetorthio/jedis">Jedis</a> lib)
  * , Redis cluster (with <a href="https://github.com/xetorthio/jedis">Jedis</a> lib),
  * and <a href="http://memcached.org/">Memcached</a>
  * (with <a href="https://github.com/couchbase/spymemcached">spymemcached</a> lib) are implemented by default.
  * <p>
- * The required commands for the cache client implementation are as follows:
+ * <p>The required commands for the cache client implementation are as follows:
  * <ul>
  * <li> setnx
  * <li> hsetnx
@@ -37,7 +37,7 @@ import org.slf4j.LoggerFactory;
  * <li> hdel
  * </ul>
  * <p>
- * Please reference the descriptions on each method for more information.
+ * <p>Please reference the descriptions on each method for more information.
  *
  * @author Ben PY Tarng
  * @see com.pytsoft.cachelock.connector.RedisClient
@@ -47,75 +47,75 @@ import org.slf4j.LoggerFactory;
  */
 public interface CacheClient {
 
-	Logger LOG = LoggerFactory.getLogger(CacheClient.class);
+    Logger LOG = LoggerFactory.getLogger(CacheClient.class);
 
-	/**
-	 * Command SETNX: set key-value pair to cache server if key not exists.
-	 *
-	 * @param key
-	 * 		Cache key
-	 * @param value
-	 * 		Value
-	 * @param expSeconds
-	 * 		Lifetime for a key-value pair to exist on cache server
-	 *
-	 * @return {@code True} if key not exists and key-value pair set successfully
-	 */
-	boolean setnx(String key, String value, int expSeconds);
+    /**
+     * Command SETNX: set key-value pair to cache server if key not exists.
+     *
+     * @param key
+     *         Cache key
+     * @param value
+     *         Value
+     * @param expSeconds
+     *         Lifetime for a key-value pair to exist on cache server
+     *
+     * @return {@code True} if key not exists and key-value pair set successfully
+     */
+    boolean setnx(String key, String value, int expSeconds);
 
-	/**
-	 * Command HSETNX: set field-value pair to hashed key on cache server if field not exists.
-	 *
-	 * @param key
-	 * 		Cache key
-	 * @param field
-	 * 		Hashed field in cache key
-	 * @param value
-	 * 		Value
-	 * @param expSeconds
-	 * 		Lifetime for a field-value pair to exist on hashed cache key
-	 *
-	 * @return {@code True} if field not exists and field-value pair hashed set successfully
-	 */
-	boolean hsetnx(String key, String field, String value, int expSeconds);
+    /**
+     * Command HSETNX: set field-value pair to hashed key on cache server if field not exists.
+     *
+     * @param key
+     *         Cache key
+     * @param field
+     *         Hashed field in cache key
+     * @param value
+     *         Value
+     * @param expSeconds
+     *         Lifetime for a field-value pair to exist on hashed cache key
+     *
+     * @return {@code True} if field not exists and field-value pair hashed set successfully
+     */
+    boolean hsetnx(String key, String field, String value, int expSeconds);
 
-	/**
-	 * Command GET: get value from key-value pair from cache server.
-	 *
-	 * @param key
-	 * 		Cache key
-	 *
-	 * @return Value stored in key-value pair
-	 */
-	String get(String key);
+    /**
+     * Command GET: get value from key-value pair from cache server.
+     *
+     * @param key
+     *         Cache key
+     *
+     * @return Value stored in key-value pair
+     */
+    String get(String key);
 
-	/**
-	 * Command HGET: get value from field-value pair from hashed cache key.
-	 *
-	 * @param key
-	 * 		Cache key
-	 * @param field
-	 * 		Field in hashed cache key
-	 *
-	 * @return Value stored in field-value pair from hashed cache key
-	 */
-	String hget(String key, String field);
+    /**
+     * Command HGET: get value from field-value pair from hashed cache key.
+     *
+     * @param key
+     *         Cache key
+     * @param field
+     *         Field in hashed cache key
+     *
+     * @return Value stored in field-value pair from hashed cache key
+     */
+    String hget(String key, String field);
 
-	/**
-	 * Command DEL: delete key from cache server.
-	 *
-	 * @param key
-	 * 		Cache key
-	 */
-	void del(String key);
+    /**
+     * Command DEL: delete key from cache server.
+     *
+     * @param key
+     *         Cache key
+     */
+    void del(String key);
 
-	/**
-	 * Command HDEL: delete field from hashed cache key.
-	 *
-	 * @param key
-	 * 		Cache key
-	 * @param field
-	 * 		Field in hashed cache key
-	 */
-	void hdel(String key, String field);
+    /**
+     * Command HDEL: delete field from hashed cache key.
+     *
+     * @param key
+     *         Cache key
+     * @param field
+     *         Field in hashed cache key
+     */
+    void hdel(String key, String field);
 }

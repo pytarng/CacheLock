@@ -34,33 +34,30 @@ import java.net.InetSocketAddress;
  */
 public class LockSmithTest_Memcached_Spymemcached extends LockSmithTest {
 
-	private MemcachedClient memcachedClient;
+    private MemcachedClient memcachedClient;
 
-	@Before
-	public void init() throws IOException {
-		super.init();
+    @Before
+    public void init() throws IOException {
+        super.init();
 
-		this.memcachedClient = new MemcachedClient(new InetSocketAddress(this.cacheServerHost, this.memcachedServerPort));
-	}
+        this.memcachedClient = new MemcachedClient(new InetSocketAddress(this.cacheServerHost, this.memcachedServerPort));
+    }
 
-	@Test
-	@Override
-	public void lock_then_unlock() {
-		MemcachedLock lock = null;
-		try {
-			com.pytsoft.cachelock.connector.MemcachedClient client = new com.pytsoft.cachelock.connector.MemcachedClient(this.memcachedClient);
+    @Test
+    @Override
+    public void lock_then_unlock() throws LockFailedException {
+        MemcachedLock lock = null;
+        try {
+            com.pytsoft.cachelock.connector.MemcachedClient client = new com.pytsoft.cachelock.connector.MemcachedClient(this.memcachedClient);
 
-			lock = new MemcachedLock(this.testTargetKey, client);
+            lock = new MemcachedLock(this.testTargetKey, client);
 
-			this.locker.lock(lock);
-			LOG.info(String.format("Lock acquired successfully for key[%s]!", this.testTargetKey));
+            this.locker.lock(lock);
+            LOG.info(String.format("Lock acquired successfully for key[%s]!", this.testTargetKey));
 
-		} catch (LockFailedException e) {
-			LOG.error(String.format("Error occurs while trying to acquire lock for key[%s]!", this.testTargetKey), e);
-
-		} finally {
-			this.locker.unlock(lock);
-			LOG.info(String.format("Lock released successfully for key[%s]!", this.testTargetKey));
-		}
-	}
+        } finally {
+            this.locker.unlock(lock);
+            LOG.info(String.format("Lock released successfully for key[%s]!", this.testTargetKey));
+        }
+    }
 }

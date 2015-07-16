@@ -23,7 +23,11 @@ package com.pytsoft.cachelock.exception;
  * @since JDK 1.6
  */
 public class LockFailedException extends Exception {
-	public LockFailedException(String errMsg) {
-		super(errMsg);
-	}
+    public LockFailedException(String errMsg) {
+        super(errMsg);
+    }
+
+    public LockFailedException(String errMsg, Throwable t) {
+        super(errMsg, t);
+    }
 }
