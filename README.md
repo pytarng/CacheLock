@@ -45,12 +45,19 @@ You can [download this jar file]() and include it in your project, or use maven 
 Otherwise, you can download the source code and customize it according to your need.
 
 
-Coding Example:
------------------------
-
-
-
 Maven
 ---------
 
+Include the following script to your `pom.xml` dependency list:
 
+    <dependency>
+        <groupId>xxx</groupId>
+        <artifactId>xxx</artifactId>
+        <version>1.0.0</version>
+    </dependency>
+
+
+Coding Samples:
+-----------------------
+
+1. For example, if 
