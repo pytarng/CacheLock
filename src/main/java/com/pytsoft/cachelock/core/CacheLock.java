@@ -67,7 +67,7 @@ import java.util.concurrent.locks.Lock;
  * @see com.pytsoft.cachelock.core.MemcachedLock
  * @since JDK 1.6
  */
-public class CacheLock implements Lock {
+public abstract class CacheLock implements Lock {
 
     protected final Logger LOG = LoggerFactory.getLogger(this.getClass());
 

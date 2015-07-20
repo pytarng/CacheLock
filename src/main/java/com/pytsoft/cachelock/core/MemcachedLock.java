@@ -16,6 +16,7 @@
 
 package com.pytsoft.cachelock.core;
 
+import com.pytsoft.cachelock.config.Configuration;
 import com.pytsoft.cachelock.connector.MemcachedClient;
 
 /**
@@ -31,7 +32,16 @@ public class MemcachedLock extends CacheLock {
         super(key, client);
     }
 
+    public MemcachedLock(String key, MemcachedClient client, Configuration config) {
+        super(key, client, config);
+    }
+
     public MemcachedLock(String key, String field, MemcachedClient client) {
         super(key, field, client);
     }
+
+    public MemcachedLock(String key, String field, MemcachedClient client, Configuration config) {
+        super(key, field, client, config);
+    }
+
 }

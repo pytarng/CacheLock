@@ -16,6 +16,7 @@
 
 package com.pytsoft.cachelock.core;
 
+import com.pytsoft.cachelock.config.Configuration;
 import com.pytsoft.cachelock.connector.RedisClient;
 
 /**
@@ -31,7 +32,15 @@ public class RedisLock extends CacheLock {
         super(key, client);
     }
 
+    public RedisLock(String key, RedisClient client, Configuration config) {
+        super(key, client, config);
+    }
+
     public RedisLock(String key, String field, RedisClient client) {
         super(key, field, client);
+    }
+
+    public RedisLock(String key, String field, RedisClient client, Configuration config) {
+        super(key, field, client, config);
     }
 }

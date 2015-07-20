@@ -17,30 +17,29 @@
 package com.pytsoft.cachelock.core;
 
 import com.pytsoft.cachelock.config.Configuration;
-import com.pytsoft.cachelock.connector.RedisClusterClient;
+import com.pytsoft.cachelock.connector.CacheClient;
 
 /**
- * The {@code RedisLock} class is the Redis-cluster child class of {@code CacheLock} with usage of {@code RedisClusterClient}.
+ * The {@code OtherCacheLock} class is the child class of {@code CacheLock} for all customized client implementation.
  *
  * @author Ben PY Tarng
  * @see com.pytsoft.cachelock.core.CacheLock
  * @since JDK 1.6
  */
-public class RedisClusterLock extends CacheLock {
-
-    public RedisClusterLock(String key, RedisClusterClient client) {
+public class OtherCacheLock extends CacheLock {
+    public OtherCacheLock(String key, CacheClient client) {
         super(key, client);
     }
 
-    public RedisClusterLock(String key, RedisClusterClient client, Configuration config) {
+    public OtherCacheLock(String key, CacheClient client, Configuration config) {
         super(key, client, config);
     }
 
-    public RedisClusterLock(String key, String field, RedisClusterClient client) {
+    public OtherCacheLock(String key, String field, CacheClient client) {
         super(key, field, client);
     }
 
-    public RedisClusterLock(String key, String field, RedisClusterClient client, Configuration config) {
+    public OtherCacheLock(String key, String field, CacheClient client, Configuration config) {
         super(key, field, client, config);
     }
 }
