@@ -41,8 +41,15 @@ Usage:
 How to Include:
 ---------------------
 
-You can [download this jar file]() and include it in your project, or use maven to import this lib. 
-Otherwise, you can download the source code and customize it according to your need.
+1. [Download this jar file](https://github.com/pytarng/CacheLock/blob/mvn-repo/com/pytsoft/CacheLock/1.0.0/CacheLock-1.0.0.jar?raw=true) and include it in your project, and then find the following dependent libs manually:
+    * [commons-lang3](http://mvnrepository.com/artifact/org.apache.commons/commons-lang3)
+    * [commons-logging](http://mvnrepository.com/artifact/commons-logging/commons-logging)
+    * [slf4j-api](http://mvnrepository.com/artifact/org.slf4j/slf4j-api)
+    * [slf4j-binding](http://mvnrepository.com/artifact/org.slf4j/slf4j-log4j12)
+    * [jedis](http://mvnrepository.com/artifact/redis.clients/jedis)
+    * [spymemcached](http://mvnrepository.com/artifact/net.spy/spymemcached)
+2. Use maven to import this lib (see the instructions below). 
+3. Download the source code and customize it according to your need.
 
 
 Maven
