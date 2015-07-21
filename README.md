@@ -69,4 +69,22 @@ Include the following script to your `pom.xml` dependency list:
 Coding Samples:
 -----------------------
 
-Under construction...
+1. Use Jedis lib to acquire lock for key "target" from Redis cache server on host "1.2.3.4" and port 6379:
+```
+    // Generate jedis client
+    Jedis jedis = new Jedis("1.2.3.4", 6379);
+    RedisClient client = new RedisClient(jedis);
+    
+    RedisLock lock = new RedisLock("target", client);
+    LockSmith locker = new LockSmith();
+    locker.lock(lock);
+    try {
+        // Operations...
+        ......
+    } finally {
+        locker.unlock(lock);
+    }
+```
+
+2. Use Jedis lib to acquire lock for key "lockit" and field "tField" from Redis cache cluster on hosts "192.168.1.1", 
+"192.168.1.2", "192.168.1.3", "192.168.1.4":
