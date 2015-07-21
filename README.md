@@ -49,7 +49,7 @@ How to Include:
     * [jedis](http://mvnrepository.com/artifact/redis.clients/jedis)
     * [spymemcached](http://mvnrepository.com/artifact/net.spy/spymemcached)
 2. Use `maven` to import this lib (see the instructions below). 
-3. Download the `source code` and customize it according to your need.
+3. [Download the source code](https://github.com/pytarng/CacheLock#fork-destination-box) and customize it according to your need.
 
 
 Maven
