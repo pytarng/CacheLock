@@ -30,7 +30,7 @@ Recent Releases:
 ####Trunk: current development branch.
 
 
-####17-July 2015 - version 1.0.0 released
+####24-July 2015 - version 1.0.0 released
 First stable version.
 
 
