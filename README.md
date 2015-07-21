@@ -166,7 +166,7 @@ Coding Samples:
       }
    ```
 6. Implement lock object with third-party client lib:
-   Cache client class:
+   * Cache client class:
    ```
       public class XYZClient implements CacheClient() {
          // Implements all required methods......
@@ -189,7 +189,7 @@ Coding Samples:
          ......
       }
    ```
-   Usage:
+   * Usage:
    ```
       // Generate cache client...
       CacheClient client = new XYZClient(......);
