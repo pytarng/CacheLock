@@ -58,33 +58,65 @@ Maven
 Include the following script to your `pom.xml` dependency list:
 
 (Central Repo under Application...)
-
+```
     <dependency>
         <groupId>xxx</groupId>
         <artifactId>xxx</artifactId>
         <version>1.0.0</version>
     </dependency>
-
+```
 
 Coding Samples:
 -----------------------
 
 1. Use Jedis lib to acquire lock for key "target" from Redis cache server on host "1.2.3.4" and port 6379:
 ```
-    // Generate jedis client
-    Jedis jedis = new Jedis("1.2.3.4", 6379);
-    RedisClient client = new RedisClient(jedis);
-    
-    RedisLock lock = new RedisLock("target", client);
-    LockSmith locker = new LockSmith();
-    locker.lock(lock);
-    try {
-        // Operations...
-        ......
-    } finally {
-        locker.unlock(lock);
-    }
+   // Generate cache client
+   Jedis jedis = new Jedis("1.2.3.4", 6379);
+   RedisClient client = new RedisClient(jedis);
+   
+   // Generate cache lock obj
+   CacheLock lock = new RedisLock("target", client);
+   
+   // Use locker to lock/unlock target
+   LockSmith locker = new LockSmith();
+   locker.lock(lock);
+   try {
+      // Operations...
+      ......
+   } finally {
+      locker.unlock(lock);
+   }
 ```
 
 2. Use Jedis lib to acquire lock for key "lockit" and field "tField" from Redis cache cluster on hosts "192.168.1.1", 
-"192.168.1.2", "192.168.1.3", "192.168.1.4":
+"192.168.1.2", "192.168.1.3", "192.168.1.4" and port 6379:
+```
+   // Generate jedis cluster client
+   Set<HostAndPort> nodes = new HashSet<HostAndPort>();
+   nodes.add(new HostAndPort(192.168.1.1, 6379));
+   nodes.add(new HostAndPort(192.168.1.2, 6379));
+   nodes.add(new HostAndPort(192.168.1.3, 6379));
+   nodes.add(new HostAndPort(192.168.1.4, 6379));
+   JedisCluster cluster = new JedisCluster(nodes);
+   RedisClusterClient client = new RedisClusterClient(cluster);
+   
+   // Generate cache lock obj
+   CacheLock lock = new RedisClusterLock("lockit", "tField", client);
+   
+   // Use locker to lock/unlock target
+   LockSmith locker = new LockSmith();
+   locker.lock(lock);
+   try {
+      // Operations...
+      ......
+   } finally {
+      locker.unlock(lock);
+   }
+```
+
+3. 
+
+4. 
+
+5. 
