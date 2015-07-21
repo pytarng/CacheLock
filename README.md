@@ -71,7 +71,7 @@ Coding Samples:
 
 1. Use Jedis lib to acquire lock for key "target" from Redis cache server on host "1.2.3.4" and port 6379:
 ```
-   // Generate cache client
+   // Generate cache client for Redis server with Jedis lib.
    Jedis jedis = new Jedis("1.2.3.4", 6379);
    RedisClient client = new RedisClient(jedis);
    
@@ -92,7 +92,7 @@ Coding Samples:
 2. Use Jedis lib to acquire lock for key "lockit" and field "tField" from Redis cache cluster on hosts "192.168.1.1", 
 "192.168.1.2", "192.168.1.3", "192.168.1.4" and port 6379:
 ```
-   // Generate jedis cluster client
+   // Generate cache client for Redis cluster with Jedis lib.
    Set<HostAndPort> nodes = new HashSet<HostAndPort>();
    nodes.add(new HostAndPort(192.168.1.1, 6379));
    nodes.add(new HostAndPort(192.168.1.2, 6379));
@@ -115,8 +115,100 @@ Coding Samples:
    }
 ```
 
-3. 
+3. Use spymemcached lib to acquire lock for key "target" from memcached cache server on host "10.10.10.10" and port 11211:
+```
+   // Generate cache client for memcached server with spymemcached lib.
+   MemcachedClient memcachedClient = new MemcachedClient(new InetSocketAddress("10.10.10.10", 11211));
+   com.pytsoft.cachelock.connector.MemcachedClient client = new com.pytsoft.cachelock.connector.MemcachedClient(memcachedClient);
+   
+   // Generate cache lock obj
+   CacheLock lock = new MemcachedLock("target", client);
+   
+   // Use locker to lock/unlock target
+   LockSmith locker = new LockSmith();
+   locker.lock(lock);
+   try {
+      // Operations...
+      ......
+   } finally {
+      locker.unlock(lock);
+   }
+```
 
-4. 
+4. Set detailed configuration for lock object:
+```
+   // Generate cache client...
+   ......
+   
+   // Generate cache lock obj with customized configuration
+   Configuration config = new Configuration();
+   config.setInitInterval(100);
+   config.setLockExpiration(30000);
+   config.setPriorityRatio(0.9f);
+   CacheLock lock = new RedisLock("target", config);
+   
+   // Use locker to lock/unlock target
+   ......
+```
 
-5. 
+5. Acquire lock with customized timeout (ex. 3 seconds):
+```
+   // Generate cache client...
+   ......
+   
+   // Generate cache lock obj...
+   ......
+   
+   // Use locker to lock/unlock target
+   LockSmith locker = new LockSmith();
+   locker.lock(lock, 3000);
+   try {
+      // Operations...
+      ......
+   } finally {
+      locker.unlock(lock);
+   }
+```
+
+6. Implement lock object with third-party client lib:
+Cache client class:
+```
+   public class XYZClient implements CacheClient() {
+      // Implements all required methods......
+      
+      @Override
+      public boolean setnx(String key, String value, int expSeconds) {
+         ......
+      }
+      
+      @Override
+      public boolean hsetnx(String key, String field, String value, int expSeconds) {
+         ......
+      }
+      
+      @Override
+      public String get(String key) {
+         ......
+      }
+      
+      ......
+   }
+```
+Usage:
+```
+   // Generate cache client...
+   CacheClient client = new XYZClient(......);
+   
+   // Generate cache lock obj...
+   CacheLock lock = new OtherCacheLock("target", client);
+   
+   // Use locker to lock/unlock target
+   LockSmith locker = new LockSmith();
+   locker.lock(lock);
+   try {
+      // Operations...
+      ......
+   } finally {
+      locker.unlock(lock);
+   }
+```
