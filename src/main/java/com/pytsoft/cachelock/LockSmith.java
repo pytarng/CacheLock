@@ -78,6 +78,7 @@ public class LockSmith {
      *         <li> cache server is inaccessible due to permission issues
      *         </ul>
      * @see com.pytsoft.cachelock.core.CacheLock
+     * @see com.pytsoft.cachelock.util.Constants
      */
     public void lock(CacheLock lock) throws LockFailedException {
 
@@ -140,4 +141,6 @@ public class LockSmith {
             throw new LockFailedException(String.format("Lock release for lock[%s] failed! Reason:[%s]", lock, e.getMessage()), e);
         }
     }
+
+
 }

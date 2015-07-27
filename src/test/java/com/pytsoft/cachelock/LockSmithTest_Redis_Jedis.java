@@ -58,7 +58,7 @@ public class LockSmithTest_Redis_Jedis extends LockSmithTest {
     public void lock_then_unlock() throws LockFailedException {
         RedisLock lock = null;
         try {
-            Jedis jedis = this.pool.getResource();
+            Jedis jedis =  this.pool.getResource();
             RedisClient client = new RedisClient(jedis);
 
             lock = new RedisLock(this.testTargetKey, client);
