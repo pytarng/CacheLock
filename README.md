@@ -62,8 +62,8 @@ Include the following script to your `pom.xml` dependency list:
 (Central Repo under Application...)
 ```
     <dependency>
-        <groupId>xxx</groupId>
-        <artifactId>xxx</artifactId>
+        <groupId>com.github.pytarng</groupId>
+        <artifactId>CacheLock</artifactId>
         <version>1.0.0</version>
     </dependency>
 ```
