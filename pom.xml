@@ -3,10 +3,32 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <name>CacheLock</name>
+    <description>A distributed and scalable Java lock management tool which can support almost all kinds of cache server</description>
+    <url>https://github.com/pytarng/CacheLock</url>
+
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+            <comments>A business-friendly OSS license</comments>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <id>pytarng</id>
+            <name>Pin-Yun Tarng</name>
+            <email>pytarng@gmail.com</email>
+            <url>https://github.com/pytarng</url>
+            <organization>PYTSoft</organization>
+        </developer>
+    </developers>
 
     <groupId>com.github.pytarng</groupId>
     <artifactId>CacheLock</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
