@@ -34,7 +34,7 @@ public class KeyUtils {
 
     /**
      * Generate lock value depends on expiration time to store in the target lock key.
-     * <p>
+     *
      * <p>The value is composed of a random UUID and expiration time separated by default namespace separator.
      *
      * @param lockExpire
@@ -49,8 +49,8 @@ public class KeyUtils {
 
     /**
      * Parse lock expiration time from lock value stored in lock key.
-     * <p>
-     * <p>If parameter is null or with invalid format => return 0.
+     *
+     * <p>If parameter is null or with invalid format, then return 0.
      *
      * @param lockValue
      *         Lock value stored in lock key

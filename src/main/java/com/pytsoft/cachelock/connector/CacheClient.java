@@ -21,12 +21,12 @@ import org.slf4j.LoggerFactory;
 
 /**
  * The {@code CacheClient} interface defines the required commands for cache client to implement.
- * <p>
+ *
  * <p><a href="http://redis.io/">Redis</a> (with <a href="https://github.com/xetorthio/jedis">Jedis</a> lib)
  * , Redis cluster (with <a href="https://github.com/xetorthio/jedis">Jedis</a> lib),
  * and <a href="http://memcached.org/">Memcached</a>
- * (with <a href="https://github.com/couchbase/spymemcached">spymemcached</a> lib) are implemented by default.
- * <p>
+ * (with <a href="https://github.com/couchbase/spymemcached">spymemcached</a> lib) are implemented by default.</p>
+ *
  * <p>The required commands for the cache client implementation are as follows:
  * <ul>
  * <li> setnx
@@ -36,8 +36,8 @@ import org.slf4j.LoggerFactory;
  * <li> del
  * <li> hdel
  * </ul>
- * <p>
- * <p>Please reference the descriptions on each method for more information.
+ *
+ * <p>Please reference the descriptions on each method for more information.</p>
  *
  * @author Ben PY Tarng
  * @see com.pytsoft.cachelock.connector.RedisClient

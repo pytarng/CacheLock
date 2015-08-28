@@ -51,12 +51,12 @@ public class Constants {
 
     /**
      * Default sleep interval decreasing ratio to make the thread who waits longer wake up earlier.
-     * <p>
+     *
      * <p>This ratio means the sleep interval decreasing ratio, after each sleep,
      * the new interval will be the multiple of the previous interval and this ratio.
-     * <p>
+     *
      * <p>For example:
-     * <blackquote><pre>
+     * <blockquote><pre>
      *     Assumes that
      *     Ratio: 0.8
      *     Current interval: 1000
@@ -65,8 +65,8 @@ public class Constants {
      *     Third interval: 800 * 0.8 = 640
      *     ......
      *     Until interval = 0 (which means do not sleep).
-     * </pre></blackquote>
-     * <p>
+     * </pre></blockquote>
+     *
      * <p>Notice that the smaller the ratio is, the faster the interval achieves zero,
      * which mean the larger CPU resources cost.
      */

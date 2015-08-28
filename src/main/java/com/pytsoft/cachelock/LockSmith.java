@@ -33,12 +33,12 @@ import java.util.concurrent.TimeUnit;
  * , Redis cluster (with <a href="https://github.com/xetorthio/jedis">Jedis</a> lib),
  * and <a href="http://memcached.org/">Memcached</a>
  * (with <a href="https://github.com/couchbase/spymemcached">spymemcached</a> lib) by default.
- * <p>
+ *
  * <p>Other cache server and client libs can be easily supported by <i>create your own custom client and lock classes</i>
- * , which <b>extends</b> abstract {@code CacheClient} and {@code CacheLock} with abstract methods implemented.
- * <p>
+ * , which <b>extends</b> abstract {@code CacheClient} and {@code CacheLock} with abstract methods implemented.</p>
+ *
  * <p>Distributed lock can be easily acquired through this class, for example:
- * <blackquote><pre>
+ * <blockquote><pre>
  *     LockSmite locker = new LockSmith();
  *     Jedis jedis = jedisPool.getResource();
  *     CacheLock target = new RedisLock("lock_key", jedis);
@@ -48,9 +48,10 @@ import java.util.concurrent.TimeUnit;
  *     finally {
  *         locker.unlock(target);
  *     }
- * </pre></blackquote>
+ * </pre></blockquote>
+ *
  * <p>Please make sure that all acquired locks will be unlock after no longer needed. The suggested way is to put the
- * {@code unlock} method call in the <i>finally statement</i>.
+ * {@code unlock} method call in the <i>finally statement</i>.</p>
  *
  * @author Ben PY Tarng
  * @see com.pytsoft.cachelock.core.CacheLock
@@ -61,7 +62,7 @@ public class LockSmith {
 
     /**
      * Acquire target distributed lock from central cache server with default timeout.
-     * <p>
+     *
      * <p>This is a <b>blocking</b> call with default maximum waiting time, and it blocks
      * while the specific target key (given in {@code CacheLock}) is already acquired by another locker and not returned yet.
      *
@@ -87,7 +88,7 @@ public class LockSmith {
 
     /**
      * Acquire target distributed lock from central cache server.
-     * <p>
+     *
      * <p>This is a <b>blocking</b> call with argument defined maximum waiting time, and it blocks
      * while the specific target key (given in {@code CacheLock}) is already acquired by another locker and not returned yet.
      *

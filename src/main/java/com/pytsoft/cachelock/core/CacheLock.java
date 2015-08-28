@@ -31,13 +31,13 @@ import java.util.concurrent.locks.Lock;
 
 /**
  * The {@code CacheLock} abstract class is the distributed implementation of the {@code java.util.concurrent.locks.Lock} interface.
- * <p>
+ *
  * <p>The lock target key, field, and user defined configurations are defined on constructor. If no user defined
- * configuration is present, default configuration will be used.
- * <p>
+ * configuration is present, default configuration will be used.</p>
+ *
  * <p>The lock class and cache client class should be in pairs, and this parent abstract class should not be used directly.
  * For example:
- * <blackquote><pre>
+ * <blockquote><pre>
  *     CacheClient redisClient = new RedisClient(jedis);
  *     CacheLock cacheLock = new RedisLock("test_key", redisClient);
  *     locker.lock(cacheLock);
@@ -47,17 +47,16 @@ import java.util.concurrent.locks.Lock;
  *     finally {
  *         locker.unlock(cacheLock);
  *     }
- * </pre></blackquote>
- * <p>
- * <p>
+ * </pre></blockquote>
+ *
  * <p>Detailed configuration settings such as lock expiration time interval, sleep interval are also supported.
  * The settings can be configured through {@code Configuration} class, for example:
- * <blackquote><pre>
+ * <blockquote><pre>
  *     Configuration config = new Configuration();
  *     config.setLockExpiration(10000);
  *     config.setInitInterval(200);
  *     CacheLock cacheLock = new RedisLock("test_key", redisClient, config);
- * </pre></blackquote>
+ * </pre></blockquote>
  *
  * @author Ben PY Tarng
  * @see java.util.concurrent.locks.Lock
@@ -127,7 +126,7 @@ public abstract class CacheLock implements Lock {
 
     /**
      * Acquires the lock.
-     * <p>
+
      * <p>If the lock is not available then the current thread becomes
      * disabled for thread scheduling purposes and lies dormant until the
      * lock has been acquired.
@@ -144,19 +143,19 @@ public abstract class CacheLock implements Lock {
     /**
      * Acquires the lock unless the current thread is
      * {@linkplain Thread#interrupt interrupted}.
-     * <p>
+     *
      * <p>Acquires the lock if it is available and returns immediately.
-     * <p>
+     *
      * <p>If the lock is not available then the current thread becomes
      * disabled for thread scheduling purposes and lies dormant until
      * one of two things happens:
-     * <p>
+     *
      * <ul>
      * <li>The lock is acquired by the current thread; or
      * <li>Some other thread {@linkplain Thread#interrupt interrupts} the
      * current thread, and interruption of lock acquisition is supported.
      * </ul>
-     * <p>
+     *
      * <p>If the current thread:
      * <ul>
      * <li>has its interrupted status set on entry to this method; or
@@ -178,12 +177,12 @@ public abstract class CacheLock implements Lock {
 
     /**
      * Acquires the lock only if it is free at the time of invocation.
-     * <p>
+     *
      * <p>Acquires the lock if it is available and returns immediately
      * with the value {@code true}.
      * If the lock is not available then this method will return
      * immediately with the value {@code false}.
-     * <p>
+     *
      * <p>A typical usage idiom for this method would be:
      * <pre> {@code
      * Lock lock = ...;
@@ -196,7 +195,7 @@ public abstract class CacheLock implements Lock {
      * } else {
      *   // perform alternative actions
      * }}</pre>
-     * <p>
+     *
      * This usage ensures that the lock is unlocked if it was acquired, and
      * doesn't try to unlock if the lock was not acquired.
      *
@@ -216,7 +215,7 @@ public abstract class CacheLock implements Lock {
     /**
      * Acquires the lock if it is free within the given waiting time and the
      * current thread has not been {@linkplain Thread#interrupt interrupted}.
-     * <p>
+     *
      * <p>If the lock is available this method returns immediately
      * with the value {@code true}.
      * If the lock is not available then
@@ -228,9 +227,9 @@ public abstract class CacheLock implements Lock {
      * current thread, and interruption of lock acquisition is supported; or
      * <li>The specified waiting time elapses
      * </ul>
-     * <p>
+     *
      * <p>If the lock is acquired then the value {@code true} is returned.
-     * <p>
+     *
      * <p>If the current thread:
      * <ul>
      * <li>has its interrupted status set on entry to this method; or
@@ -239,7 +238,7 @@ public abstract class CacheLock implements Lock {
      * </ul>
      * then {@link InterruptedException} is thrown and the current thread's
      * interrupted status is cleared.
-     * <p>
+     *
      * <p>If the specified waiting time elapses then the value {@code false}
      * is returned.
      * If the time is
@@ -346,7 +345,7 @@ public abstract class CacheLock implements Lock {
     /**
      * Returns a new {@link Condition} instance that is bound to this
      * {@code Lock} instance.
-     * <p>
+     *
      * <p>This lock does not support conditions.
      *
      * @return A new {@link Condition} instance for this {@code Lock} instance

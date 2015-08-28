@@ -18,7 +18,7 @@ package com.pytsoft.cachelock.config;
 
 /**
  * The {@code Configuration} class is to hold all configuration settings for lock acquisition process.
- * <p>
+ *
  * <p>Current content settings are as follows:
  * <ul>
  * <li> initInterval - Sleep interval in milliseconds for lock acquisition process
