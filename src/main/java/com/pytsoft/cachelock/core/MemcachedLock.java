@@ -24,7 +24,7 @@ import com.pytsoft.cachelock.connector.MemcachedClient;
  *
  * @author Ben PY Tarng
  * @see com.pytsoft.cachelock.core.CacheLock
- * @since JDK 1.6
+ * @since 1.0.0
  */
 public class MemcachedLock extends CacheLock {
 

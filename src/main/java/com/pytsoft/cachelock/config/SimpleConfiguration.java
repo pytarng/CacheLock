@@ -23,7 +23,7 @@ import com.pytsoft.cachelock.util.Constants;
  *
  * @author Ben PY Tarng
  * @see com.pytsoft.cachelock.util.Constants
- * @since JDK 1.6
+ * @since 1.0.0
  */
 public class SimpleConfiguration extends DefaultConfiguration {
 

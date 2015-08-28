@@ -29,7 +29,7 @@ import java.util.UUID;
  *
  * @author Ben PY Tarng
  * @see com.pytsoft.cachelock.LockSmith
- * @since JDK 1.6
+ * @since 1.0.0
  */
 public abstract class LockSmithTest {
 

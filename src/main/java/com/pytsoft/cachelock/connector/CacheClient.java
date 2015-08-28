@@ -43,7 +43,7 @@ import org.slf4j.LoggerFactory;
  * @see com.pytsoft.cachelock.connector.RedisClient
  * @see com.pytsoft.cachelock.connector.RedisClusterClient
  * @see com.pytsoft.cachelock.connector.MemcachedClient
- * @since JDK 1.6
+ * @since 1.0.0
  */
 public interface CacheClient {
 

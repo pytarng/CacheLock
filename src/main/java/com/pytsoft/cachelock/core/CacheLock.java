@@ -64,7 +64,7 @@ import java.util.concurrent.locks.Lock;
  * @see com.pytsoft.cachelock.core.RedisLock
  * @see com.pytsoft.cachelock.core.RedisClusterLock
  * @see com.pytsoft.cachelock.core.MemcachedLock
- * @since JDK 1.6
+ * @since 1.0.0
  */
 public abstract class CacheLock implements Lock {
 

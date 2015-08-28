@@ -20,7 +20,7 @@ package com.pytsoft.cachelock.exception;
  * The {@code InnerException} class is the exception for inner runtime exception.
  *
  * @author Ben PY Tarng
- * @since JDK 1.6
+ * @since 1.0.0
  */
 public class InnerException extends RuntimeException {
 }

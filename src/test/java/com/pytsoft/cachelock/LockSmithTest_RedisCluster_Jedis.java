@@ -34,7 +34,7 @@ import java.util.Set;
  *
  * @author Ben PY Tarng
  * @see com.pytsoft.cachelock.LockSmith
- * @since JDK 1.6
+ * @since 1.0.0
  */
 public class LockSmithTest_RedisCluster_Jedis extends LockSmithTest {
 

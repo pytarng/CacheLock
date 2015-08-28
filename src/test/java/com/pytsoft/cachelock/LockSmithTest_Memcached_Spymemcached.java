@@ -30,7 +30,7 @@ import java.net.InetSocketAddress;
  *
  * @author Ben PY Tarng
  * @see com.pytsoft.cachelock.LockSmith
- * @since JDK 1.6
+ * @since 1.0.0
  */
 public class LockSmithTest_Memcached_Spymemcached extends LockSmithTest {
 

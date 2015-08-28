@@ -26,7 +26,7 @@ import java.util.UUID;
  * The {@code KeyUtils} class is the lock key / value handling utility.
  *
  * @author Ben PY Tarng
- * @since JDK 1.6
+ * @since 1.0.0
  */
 public class KeyUtils {
 

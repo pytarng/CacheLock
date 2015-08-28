@@ -20,7 +20,7 @@ package com.pytsoft.cachelock.util;
  * The {@code Constants} class defines constants.
  *
  * @author Ben PY Tarng
- * @since JDK 1.6
+ * @since 1.0.0
  */
 public class Constants {
 
